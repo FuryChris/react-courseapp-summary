@@ -2,14 +2,22 @@
 import React from 'react';
 import SearchBar from './SearchBar';
 import VideoList from './VideoList';
+import VideoDetail from './VideoDetail';
 import youtube from '../apis/youtube';
 
-const KEY = "yt key ;)";
+const KEY = "API YT KEY ;)";
 
 
 class App extends React.Component {
 
-    state = { videos: [] };
+    state = {
+        videos: [],
+        selectedVideo: null
+    };
+
+    componentDidMount() {
+        this.onTermSubmit('smartgasm')
+    }
 
     onTermSubmit = async (term) => {
         // .get because yt func is preconfigured function of axios
@@ -22,9 +30,14 @@ class App extends React.Component {
                 key: KEY
             }
         });
-        this.setState({ videos: response.data.items });
-        console.log(this.state)
+        this.setState({
+            videos: response.data.items,
+            selectedVideo: response.data.items[0]
+        });
+    };
 
+    onVideoSelect = (video) => {
+        this.setState({ selectedVideo: video });
     };
 
     render() {
@@ -32,7 +45,17 @@ class App extends React.Component {
             <div className="ui container">
                 {/* onFormSubmit - that could be any name of that prop. I chose onFormSubmit. that could be also onTermSubmit. :) */}
                 <SearchBar callWhenSubmit={this.onTermSubmit} />
-                <VideoList videos={this.state.videos} />
+                <div className="ui grid">
+                    <div className="ui row">
+                        <div className="eleven wide column">
+                            <VideoDetail video={this.state.selectedVideo} />
+                        </div>
+                        <div className="five wide column">
+                            <VideoList
+                                onVideoSelect={this.onVideoSelect}
+                                videos={this.state.videos} /></div>
+                    </div>
+                </div>
             </div>
         );
     }

@@ -1,11 +1,15 @@
 import './VideoItem.css';
 import React from 'react';
 
-const VideoItem = ({ video }) => {
+const VideoItem = ({ video, onVideoSelect }) => {
     // props.video props passing through VideoList
     return (
-        <div className="video-item item">
-            <img className="ui image" src={video.snippet.thumbnails.default.url} alt="no pic found" />
+        // // () => onVideoSelect(video)   why only that way is it working?
+        <div onClick={() => onVideoSelect(video)} className="video-item item">
+            <img
+                className="ui image"
+                src={video.snippet.thumbnails.default.url}
+                alt={video.snippet.title} />
             <div className="content">
                 <div className="header">
                     {video.snippet.title}
